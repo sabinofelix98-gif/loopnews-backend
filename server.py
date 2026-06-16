@@ -1592,7 +1592,7 @@ async def process_and_save_news(news_item: News, news_list: list) -> bool:
         
         # Generate AI summary for articles with enough content
         try:
-            from services.ai_service import generate_summary
+            from ai_service import generate_summary
             ai_summary = await generate_summary(
                 news_data.get("title", ""),
                 news_data.get("summary", ""),
@@ -3630,7 +3630,7 @@ async def scheduled_quality_check():
             fixed_count += 1
     
     # 2. Fix misclassified articles using smart_reclassify
-    from services.news_service import smart_reclassify, SOURCE_FORCED_CATEGORY
+    # from news_service import smart_reclassify, SOURCE_FORCED_CATEGORY
     
     for source, correct_cat in SOURCE_FORCED_CATEGORY.items():
         result = await db.news.update_many(
