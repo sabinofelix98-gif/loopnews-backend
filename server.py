@@ -199,6 +199,80 @@ async def get_current_user(request: Request) -> User:
 
 # ==================== AUTH ENDPOINTS ====================
 
+class GoogleAuthRequest(BaseModel):
+    email: str
+    name: str
+    picture: Optional[str] = None
+    google_id: str
+
+@api_router.post("/auth/google")
+async def google_auth(request: GoogleAuthRequest, response: Response):
+    """Authenticate user with Google credentials (for standalone app)"""
+    try:
+        # Check if user exists
+        existing_user = await db.users.find_one(
+            {"email": request.email},
+            {"_id": 0}
+        )
+        
+        if existing_user:
+            user_id = existing_user["user_id"]
+            # Update user data
+            await db.users.update_one(
+                {"user_id": user_id},
+                {"$set": {
+                    "name": request.name,
+                    "picture": request.picture or ""
+                }}
+            )
+            user_doc = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+        else:
+            # Create new user
+            user_id = f"user_{uuid.uuid4().hex[:12]}"
+            new_user = User(
+                user_id=user_id,
+                email=request.email,
+                name=request.name,
+                picture=request.picture or "",
+                interests=[],
+                onboarding_completed=False
+            )
+            await db.users.insert_one(new_user.dict())
+            user_doc = new_user.dict()
+        
+        # Create session
+        session_token = f"session_{uuid.uuid4().hex}"
+        expires_at = datetime.now(timezone.utc) + timedelta(days=30)
+        
+        session = UserSession(
+            user_id=user_id,
+            session_token=session_token,
+            expires_at=expires_at
+        )
+        await db.user_sessions.insert_one(session.dict())
+        
+        # Set cookie
+        response.set_cookie(
+            key="session_token",
+            value=session_token,
+            httponly=True,
+            secure=True,
+            samesite="none",
+            path="/",
+            max_age=30 * 24 * 60 * 60
+        )
+        
+        logger.info(f"User authenticated via Google: {request.email}")
+        
+        return {
+            "user": user_doc,
+            "session_token": session_token
+        }
+        
+    except Exception as e:
+        logger.error(f"Google auth error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.post("/auth/session")
 async def exchange_session(request: SessionRequest, response: Response):
     """Exchange Emergent session_id for app session_token"""
