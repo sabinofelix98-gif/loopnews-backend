@@ -227,7 +227,7 @@ async def send_verification_email(email: str, code: str):
                     "Content-Type": "application/json"
                 },
                 json={
-                    "from": "LoopNews <onboarding@resend.dev>",
+                    "from": "LoopNews <loopnews@loopnewsapp.com>",
                     "to": [email],
                     "subject": f"Seu código de verificação: {code}",
                     "html": f"""
