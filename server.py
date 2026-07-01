@@ -2194,6 +2194,25 @@ CATEGORY_KEYWORDS = {
         "one piece", "naruto", "dragon ball", "demon slayer",
         "jujutsu kaisen", "my hero academia", "attack on titan",
     ],
+    "policial": [
+        "homicídio", "homicidio", "assassinato", "assassino", "assassina",
+        "crime", "criminoso", "criminosa", "bandido", "bandida",
+        "tráfico", "trafico", "traficante", "drogas", "cocaína", "maconha",
+        "polícia", "policia", "policial", "delegacia", "delegado",
+        "prisão", "preso", "presa", "detido", "detida", "apreensão",
+        "roubo", "assalto", "furto", "sequestro", "sequestrador",
+        "estupro", "violência", "violencia", "agressão", "agressao",
+        "facção", "faccao", "quadrilha", "organização criminosa",
+        "operação policial", "mandado", "busca e apreensão",
+        "arma", "armamento", "munição", "tiroteio", "bala perdida",
+        "morte", "corpo encontrado", "cadáver", "vítima fatal",
+        "feminicídio", "feminicidio", "latrocínio", "latrocinio",
+        "golpe", "estelionato", "fraude", "lavagem de dinheiro",
+        "milícia", "milicia", "pistoleiro", "execução",
+        "investigação criminal", "inquérito", "indiciado", "indiciada",
+        "presídio", "presidio", "penitenciária", "penitenciaria",
+        "fugitivo", "fugitiva", "foragido", "foragida",
+    ],
 }
 
 # Source-based forced categories: these sources ALWAYS stay in their category
@@ -3113,6 +3132,8 @@ async def get_categories():
         # Famosos e Futebol
         {"id": "famosos", "name": "Famosos", "icon": "star"},
         {"id": "futebol", "name": "Futebol", "icon": "football"},
+        # Policial
+        {"id": "policial", "name": "Policial", "icon": "alert-circle"},
     ]
 
 # ==================== NEWS SOURCES INFO ====================
